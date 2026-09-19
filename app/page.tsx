@@ -3,8 +3,8 @@ import Image from 'next/image';
 import MeetingCard from '@/components/MeetingCard';
 import { getMeetings } from '@/lib/meetings-db';
 
-export default function Home() {
-  const meetings = getMeetings().slice(0, 3);
+export default async function Home() {
+  const meetings = (await getMeetings()).slice(0, 3);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
