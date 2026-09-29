@@ -9,8 +9,8 @@ function getToday(): string {
 	return `${today.getFullYear()}-${month}-${day}`;
 }
 
-export default function CurrentMeetingPage() {
-	const meetings = getMeetings();
+export default async function CurrentMeetingPage() {
+	const meetings = await getMeetings();
 	const today = getToday();
 	const sortedMeetings = [...meetings].sort((left, right) => left.date.localeCompare(right.date));
 	const meeting = sortedMeetings.find((item) => item.date >= today) ?? sortedMeetings.at(-1);

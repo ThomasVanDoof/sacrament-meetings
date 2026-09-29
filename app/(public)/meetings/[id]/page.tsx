@@ -10,7 +10,7 @@ interface MeetingPageProps {
 export default async function MeetingPage({ params }: MeetingPageProps) {
 	const { id } = await params;
 	const meetingId = parseMeetingId(id);
-	const meeting = meetingId === null ? null : getMeetingById(meetingId);
+	const meeting = meetingId === null ? null : await getMeetingById(meetingId);
 
 	if (!meeting) notFound();
 
