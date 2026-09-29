@@ -74,18 +74,42 @@ export async function getMeetingById(id: number): Promise<SacramentMeeting | nul
 	return (rows[0] as SacramentMeeting | undefined) ?? null;
 }
 
-export function addMeeting(_meeting: Omit<SacramentMeeting, 'id'>): never {
-	void _meeting;
-	throw new Error('addMeeting is not implemented yet');
+export async function addMeeting(meeting: Omit<SacramentMeeting, 'id'>): Promise<void> {
+	await sql`
+		INSERT INTO meetings (
+			date, meeting_type, presiding, conducting, announcements, opening_hymn,
+			opening_prayer, ward_business, stake_business, sacrament_hymn, speakers,
+			closing_hymn, closing_prayer
+		)
+		VALUES (
+			${meeting.date}, ${meeting.meetingType}, ${meeting.presiding}, ${meeting.conducting},
+			${JSON.stringify(meeting.announcements ?? [])}::jsonb,
+			${JSON.stringify(meeting.openingHymn)}::jsonb, ${meeting.openingPrayer},
+			${JSON.stringify(meeting.wardBusiness)}::jsonb, ${meeting.stakeBusiness},
+			${JSON.stringify(meeting.sacramentHymn)}::jsonb, ${JSON.stringify(meeting.speakers)}::jsonb,
+			${JSON.stringify(meeting.closingHymn)}::jsonb, ${meeting.closingPrayer}
+		)
+	`;
 }
 
-export function updateMeeting(_id: number, _meeting: Omit<SacramentMeeting, 'id'>): never {
-	void _id;
-	void _meeting;
-	throw new Error('updateMeeting is not implemented yet');
+export async function updateMeeting(id: number, meeting: Omit<SacramentMeeting, 'id'>): Promise<void> {
+	await sql`
+		UPDATE meetings
+		SET date = ${meeting.date}, meeting_type = ${meeting.meetingType},
+			presiding = ${meeting.presiding}, conducting = ${meeting.conducting},
+			announcements = ${JSON.stringify(meeting.announcements ?? [])}::jsonb,
+			opening_hymn = ${JSON.stringify(meeting.openingHymn)}::jsonb,
+			opening_prayer = ${meeting.openingPrayer},
+			ward_business = ${JSON.stringify(meeting.wardBusiness)}::jsonb,
+			stake_business = ${meeting.stakeBusiness},
+			sacrament_hymn = ${JSON.stringify(meeting.sacramentHymn)}::jsonb,
+			speakers = ${JSON.stringify(meeting.speakers)}::jsonb,
+			closing_hymn = ${JSON.stringify(meeting.closingHymn)}::jsonb,
+			closing_prayer = ${meeting.closingPrayer}
+		WHERE id = ${id}
+	`;
 }
 
-export function deleteMeeting(_id: number): never {
-	void _id;
-	throw new Error('deleteMeeting is not implemented yet');
+export async function deleteMeeting(id: number): Promise<void> {
+	await sql`DELETE FROM meetings WHERE id = ${id}`;
 }

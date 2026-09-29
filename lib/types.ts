@@ -35,3 +35,9 @@ export interface SacramentMeeting {
   closingHymn: Hymn;
   closingPrayer: string;
 }
+
+export interface MeetingActionState {
+  message: string;
+  errors?: Record<string, string[]>;
+  values?: Record<string, string>;
+}
