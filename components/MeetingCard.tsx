@@ -4,6 +4,7 @@ import type { SacramentMeeting } from '@/lib/types';
 
 interface MeetingCardProps {
 	meeting: SacramentMeeting;
+	canManage?: boolean;
 }
 
 function formatDate(date: string): string {
@@ -14,7 +15,7 @@ function formatDate(date: string): string {
 	}).format(new Date(`${date}T12:00:00`));
 }
 
-export default function MeetingCard({ meeting }: MeetingCardProps) {
+export default function MeetingCard({ meeting, canManage = false }: MeetingCardProps) {
 	const speakerCount = meeting.speakers.filter((item) => item.type === 'speaker').length;
 
 	return (
@@ -42,13 +43,15 @@ export default function MeetingCard({ meeting }: MeetingCardProps) {
 					</div>
 				</dl>
 			</Link>
-			<div className="flex items-center justify-between border-t border-line px-5 py-3 text-sm">
-				<Link className="font-semibold text-accent underline" href={`/meetings/${meeting.id}/edit`}>Edit</Link>
-				<form action={deleteMeeting}>
-					<input type="hidden" name="id" value={meeting.id} />
-					<button className="font-semibold text-red-700 underline" type="submit">Delete</button>
-				</form>
-			</div>
+			{canManage && (
+				<div className="flex items-center justify-between border-t border-line px-5 py-3 text-sm">
+					<Link className="font-semibold text-accent underline" href={`/meetings/${meeting.id}/edit`}>Edit</Link>
+					<form action={deleteMeeting}>
+						<input type="hidden" name="id" value={meeting.id} />
+						<button className="font-semibold text-red-700 underline" type="submit">Delete</button>
+					</form>
+				</div>
+			)}
 		</article>
 	);
 }

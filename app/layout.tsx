@@ -15,8 +15,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sacrament Meetings",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: {
+    default: "Sacrament Meetings",
+    template: "%s | Sacrament Meetings",
+  },
   description: "A clear, shared record of ward sacrament meetings.",
+  openGraph: {
+    type: "website",
+    title: "Sacrament Meetings",
+    description: "A clear, shared record of ward sacrament meetings.",
+    images: [
+      {
+        url: "/meeting.png",
+        width: 535,
+        height: 350,
+        alt: "Ward members gathered for a sacrament meeting",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

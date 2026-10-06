@@ -1,7 +1,14 @@
+import type { Metadata } from 'next';
+import { auth } from '@/auth';
 import MeetingCard from '@/components/MeetingCard';
 import { Pagination } from '@/components/Pagination';
 import { MeetingSearch } from '@/components/MeetingSearch';
 import { getMeetings, getMeetingsTotalPages } from '@/lib/meetings-db';
+
+export const metadata: Metadata = {
+	title: 'Meeting Archive',
+	description: 'Browse and search the complete record of Cedar Grove Ward sacrament meeting agendas.',
+};
 
 export default async function MeetingsPage(props: {
 	searchParams?: Promise<{ query?: string; page?: string }>;
@@ -9,9 +16,10 @@ export default async function MeetingsPage(props: {
 	const searchParams = await props.searchParams;
 	const query = searchParams?.query ?? '';
 	const currentPage = Math.max(Number(searchParams?.page) || 1, 1);
-	const [meetings, totalPages] = await Promise.all([
+	const [meetings, totalPages, session] = await Promise.all([
 		getMeetings(query, null, currentPage),
 		getMeetingsTotalPages(query),
+		auth(),
 	]);
 
 	return (
@@ -25,7 +33,7 @@ export default async function MeetingsPage(props: {
 				<MeetingSearch />
 			</div>
 			<div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{meetings.map((meeting) => <MeetingCard key={meeting.id} meeting={meeting} />)}
+				{meetings.map((meeting) => <MeetingCard key={meeting.id} meeting={meeting} canManage={Boolean(session?.user)} />)}
 			</div>
 			<Pagination totalPages={totalPages} />
 		</div>

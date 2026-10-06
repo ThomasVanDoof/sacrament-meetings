@@ -20,6 +20,12 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Authentication
+
+The meeting planner uses an Auth.js credentials provider with one administrator account. Add `AUTH_SECRET`, `ADMIN_USERNAME`, and `ADMIN_PASSWORD` to `.env.local`; use a unique, strong password and keep these values out of source control. Generate `AUTH_SECRET` with `node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"`. Set `NEXT_PUBLIC_SITE_URL` to the app's public origin so Open Graph image URLs are absolute when deployed. See `.env.example` for the variable names.
+
+Unauthenticated visitors who open planner pages are sent to `/login`. The login form defaults to `/meetings/new` after sign-in, and the planner provides a sign-out button.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import { requireAdmin } from '@/lib/auth-guard';
 import { addMeeting, deleteMeeting as deleteMeetingById, updateMeeting as updateMeetingById } from '@/lib/meetings-db';
 import { isMeetingDate, parseMeetingId } from '@/lib/meeting-input';
 import type { MeetingActionState, SacramentMeeting } from '@/lib/types';
@@ -95,6 +96,7 @@ function validationState(values: MeetingFormValues, error: z.ZodError): MeetingA
 }
 
 export async function createMeeting(_previousState: MeetingActionState, formData: FormData): Promise<MeetingActionState> {
+	await requireAdmin();
 	const values = getFormValues(formData);
 	const parsed = MeetingFormSchema.safeParse(values);
 	if (!parsed.success) return validationState(values, parsed.error);
@@ -111,6 +113,7 @@ export async function createMeeting(_previousState: MeetingActionState, formData
 }
 
 export async function updateMeeting(id: number, _previousState: MeetingActionState, formData: FormData): Promise<MeetingActionState> {
+	await requireAdmin();
 	const values = getFormValues(formData);
 	const parsed = MeetingFormSchema.safeParse(values);
 	if (!parsed.success) return validationState(values, parsed.error);
@@ -128,6 +131,7 @@ export async function updateMeeting(id: number, _previousState: MeetingActionSta
 }
 
 export async function deleteMeeting(formData: FormData): Promise<void> {
+	await requireAdmin();
 	const id = parseMeetingId(String(formData.get('id') ?? ''));
 	if (id === null) throw new Error('A valid meeting ID is required.');
 
